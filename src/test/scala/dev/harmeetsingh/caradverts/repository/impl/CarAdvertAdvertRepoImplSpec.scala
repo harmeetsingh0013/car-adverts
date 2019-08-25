@@ -30,9 +30,9 @@ class CarAdvertAdvertRepoImplSpec extends DynamoTestTrait with BeforeAndAfterAll
     private val dbClient = new DynamoDBClient
     private val carRepo = new CarAdvertRepoImpl(dbClient)
     
-    private final val car500 = CarAdvert(1, "Car500", Fuel.DIESEL, 500, false, Some(12), None)
-    private final val car600 = CarAdvert(3, "Car600", Fuel.GASOLINE, 600, false, Some(23), None)
-    private final val car700 = CarAdvert(2, "Car700", Fuel.DIESEL, 700, false, Some(3), None)
+    private final val car500 = CarAdvert(1, "Car500", Fuel.DIESEL, 500, false, Some(12), Some(LocalDate.now().plusDays(1)))
+    private final val car600 = CarAdvert(3, "Car600", Fuel.GASOLINE, 600, false, Some(23), Some(LocalDate.now().plusDays(2)))
+    private final val car700 = CarAdvert(2, "Car700", Fuel.DIESEL, 700, false, Some(3), Some(LocalDate.now().plusDays(3)))
     
     override def afterAll() : Unit = {
         super.afterAll()
@@ -67,6 +67,40 @@ class CarAdvertAdvertRepoImplSpec extends DynamoTestTrait with BeforeAndAfterAll
     it should "return all car-advert records sorted by mileage" in {
         carRepo.findAllCarAdverts(Some("mileage")).map {
             _   should contain theSameElementsInOrderAs  List(car700, car500, car600)
+        }
+    }
+    
+    it should "return all car-advert records sorted by firstRegistration" in {
+        carRepo.findAllCarAdverts(Some("firstRegistration")).map {
+            _   should contain theSameElementsInOrderAs  List(car500, car600, car700)
+        }
+    }
+    
+    it should "find car advert by ID with success" in {
+        carRepo.findCarAdvertByID(car500.id).map {
+            _ should === (Some(car500))
+        }
+    }
+    
+    it should "find car advert by ID with failure" in {
+        carRepo.findCarAdvertByID(13).map {
+            _ should === (None)
+        }
+    }
+    
+    it should "update car advert with success" in {
+        carRepo.addOrUpdateCarAdvert(car500.copy(title = "Car5000")).flatMap { _ =>
+            carRepo.findCarAdvertByID(car500.id).map {
+                _ should === (Some(car500.copy(title = "Car5000")))
+            }
+        }
+    }
+    
+    it should "delete car advert by id with success" in {
+        carRepo.deleteCarAdvertByID(car500.id).flatMap { _ =>
+            carRepo.findAllCarAdverts(None).map {
+                _ should contain theSameElementsInOrderAs  List(car700, car600)
+            }
         }
     }
 }

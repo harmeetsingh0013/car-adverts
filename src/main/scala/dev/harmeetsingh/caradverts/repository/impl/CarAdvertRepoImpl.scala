@@ -52,13 +52,18 @@ class CarAdvertRepoImpl (dynamoDBClient: DynamoDBClient)(implicit system: ActorS
     }
     
     def findAllCarAdverts(sortingField : Option[String]) : Future[List[CarAdvert]] = {
+    
         val data = futureOfIterableEitherToFutureSeq (ScanamoAlpakka.exec(dbClient)(CarTable.scan())).map(_.toList)
+    
+        implicit val localDateOrdering: Ordering[LocalDate] = Ordering.by(_.toEpochDay)
+    
         sortingField match{
             case Some("title") => data.map(_.sortBy(_.title))
             case Some("fuel") => data.map(_.sortBy(_.fuel))
             case Some("price") => data.map(_.sortBy(_.price))
             case Some("new") => data.map(_.sortBy(_.`new`))
             case Some("mileage") => data.map(_.sortBy(_.mileage))
+            case Some("firstRegistration") => data.map(_.sortBy(_.firstRegistration))
             case _ => data.map(_.sortBy(_.id))
         }
     }
