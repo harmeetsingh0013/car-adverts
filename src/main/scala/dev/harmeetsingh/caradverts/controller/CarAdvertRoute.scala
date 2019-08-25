@@ -1,14 +1,15 @@
 package dev.harmeetsingh.caradverts.controller
 
 import akka.http.scaladsl.server.Route
+import dev.harmeetsingh.caradverts.configuration.CORSHandler
 import dev.harmeetsingh.caradverts.service.CarAdvertService
 import scala.concurrent.ExecutionContext
 import dev.harmeetsingh.caradverts.model.CarAdvertProtocol._
 import dev.harmeetsingh.caradverts.model.{BasicResponse, InsertOrUpdateCarAdvertRequest}
 
-class CarAdvertRoute (carService: CarAdvertService)(implicit ec : ExecutionContext) extends BaseRoute {
+class CarAdvertRoute (carService: CarAdvertService)(implicit ec : ExecutionContext) extends BaseRoute with CORSHandler {
     
-    val route: Route = {
+    val route: Route = corsHandler {
         pathPrefix("car-adverts") {
             getCarAdvertById ~
             getAllCarAdverts ~
