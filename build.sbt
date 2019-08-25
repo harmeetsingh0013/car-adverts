@@ -53,7 +53,7 @@ copyJars := {
 
 coverageEnabled := true
 
-coverageExcludedPackages := "<empty>;dev.harmeetsingh.urlshortner.configuration\\..*;dev.harmeetsingh.urlshortner.Application"
+coverageExcludedPackages := "<empty>;dev.harmeetsingh.caradverts.configuration\\..*;dev.harmeetsingh.caradverts.Application"
 
 scapegoatVersion in ThisBuild := "1.3.8"
 

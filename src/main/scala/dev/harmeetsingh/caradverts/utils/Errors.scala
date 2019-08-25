@@ -5,7 +5,7 @@ import spray.json.DefaultJsonProtocol
 
 sealed abstract class Errors(val message: String)
 
-case class MandatoryFieldValueMissing(override val message: String) extends Errors(message)
+final case class MandatoryFieldValueMissing(override val message: String) extends Errors(message)
 
 object ErrorProtocols extends DefaultJsonProtocol with SprayJsonSupport{
     implicit val MandatoryFieldValueMissingFormatter = jsonFormat1(MandatoryFieldValueMissing)

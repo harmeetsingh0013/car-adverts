@@ -6,7 +6,7 @@ import dev.harmeetsingh.caradverts.model.Fuel
 import spray.json.DefaultJsonProtocol
 import dev.harmeetsingh.caradverts.model.CarAdvertProtocol._
 
-case class CarAdvert(
+final case class CarAdvert(
     id: Int,
     title: String,
     fuel : Fuel,

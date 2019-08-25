@@ -7,9 +7,9 @@ import dev.harmeetsingh.caradverts.entity.CarAdvert
 import spray.json.{DefaultJsonProtocol, JsString, JsValue, RootJsonFormat, deserializationError}
 import scala.util.Try
 
-case class InsertOrUpdateCarAdvertRequest(carAdvert: CarAdvert)
+final case class InsertOrUpdateCarAdvertRequest(carAdvert: CarAdvert)
 
-case class BasicResponse(status: Boolean, message: Option[String] = None)
+final case class BasicResponse(status: Boolean, message: Option[String] = None)
 
 object CarAdvertProtocol extends SprayJsonSupport with DefaultJsonProtocol {
     

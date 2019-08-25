@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "52b2ef1c-120a-42d5-849e-3deb7d85c383",
+		"name": "CarAdvert",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "InsertNewCarAdvert",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"carAdvert\": {\r\n\t\t\"id\": 1,\r\n\t\t\"title\": \"car500\",\r\n\t\t\"fuel\": \"dieseL\",\r\n\t\t\"price\": 132,\r\n\t\t\"new\": true,\r\n\t\t\"mileage\": 12,\r\n\t\t\"firstRegistration\" : \"2019-08-25\"\r\n\t}\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/car-adverts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"car-adverts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllCarAdverts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/car-adverts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"car-adverts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCarAdvertsByID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/car-adverts/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"car-adverts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteCarAdvertByID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/car-adverts/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"car-adverts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateCarAdvert",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"carAdvert\": {\r\n\t\t\"id\": 1,\r\n\t\t\"title\": \"car500\",\r\n\t\t\"fuel\": \"dieseL\",\r\n\t\t\"price\": 132,\r\n\t\t\"new\": true\r\n\t}\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/car-adverts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"car-adverts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
