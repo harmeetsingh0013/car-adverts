@@ -4,20 +4,20 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import akka.Done
 import akka.actor.ActorSystem
+import akka.stream.alpakka.dynamodb.scaladsl.DynamoImplicits._
 import com.amazonaws.services.dynamodbv2.model.{AttributeDefinition, CreateTableRequest, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType}
+import com.gu.scanamo.syntax._
 import com.gu.scanamo.{DynamoFormat, ScanamoAlpakka, Table}
 import dev.harmeetsingh.caradverts.configuration.dependencies.db.DynamoDBClient
-import dev.harmeetsingh.caradverts.entity.Car._
-import dev.harmeetsingh.caradverts.repository.CarRepo
-import scala.concurrent.{ExecutionContextExecutor, Future}
-import akka.stream.alpakka.dynamodb.scaladsl.DynamoImplicits._
-import dev.harmeetsingh.caradverts.entity.Car
-import dev.harmeetsingh.caradverts.repository.impl.DynamoUtils._
-import dev.harmeetsingh.caradverts.repository.impl.CarRepoImpl._
+import dev.harmeetsingh.caradverts.entity.CarAdvert
+import dev.harmeetsingh.caradverts.entity.CarAdvert._
 import dev.harmeetsingh.caradverts.model.EnumProtocols.ordering
-import com.gu.scanamo.syntax._
+import dev.harmeetsingh.caradverts.repository.CarAdvertRepo
+import dev.harmeetsingh.caradverts.repository.impl.CarAdvertRepoImpl._
+import dev.harmeetsingh.caradverts.repository.impl.DynamoUtils._
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
-object CarRepoImpl{
+object CarAdvertRepoImpl{
     private final val datePattern = DateTimeFormatter.ISO_LOCAL_DATE
     
     implicit val localDataFormat = DynamoFormat.coercedXmap[LocalDate, String, IllegalArgumentException](
@@ -26,9 +26,9 @@ object CarRepoImpl{
         _.toString
     )
     
-    final val CarTable: Table[Car] = Table[Car](TableName)
+    final val CarTable: Table[CarAdvert] = Table[CarAdvert](TableName)
 }
-class CarRepoImpl (dynamoDBClient: DynamoDBClient)(implicit system: ActorSystem) extends CarRepo {
+class CarAdvertRepoImpl (dynamoDBClient: DynamoDBClient)(implicit system: ActorSystem) extends CarAdvertRepo {
     
     implicit val m_executionContext : ExecutionContextExecutor = system.dispatcher
     val dbClient = dynamoDBClient.dbClient
@@ -51,7 +51,7 @@ class CarRepoImpl (dynamoDBClient: DynamoDBClient)(implicit system: ActorSystem)
             .map(_ => Done)
     }
     
-    def findAllCar(sortingField : Option[String]) : Future[List[Car]] = {
+    def findAllCarAdverts(sortingField : Option[String]) : Future[List[CarAdvert]] = {
         val data = futureOfIterableEitherToFutureSeq (ScanamoAlpakka.exec(dbClient)(CarTable.scan())).map(_.toList)
         sortingField match{
             case Some("title") => data.map(_.sortBy(_.title))
@@ -63,11 +63,15 @@ class CarRepoImpl (dynamoDBClient: DynamoDBClient)(implicit system: ActorSystem)
         }
     }
     
-    def findCarByID(id: Int): Future[Option[Car]] = futureOfOptionEitherToFutureOption{
+    def findCarAdvertByID(id: Int): Future[Option[CarAdvert]] = futureOfOptionEitherToFutureOption{
         ScanamoAlpakka.exec(dbClient)(CarTable.get(ID -> id))
     }
     
-    def addNewCar(car: Car): Future[Option[Car]] = futureOfOptionEitherToFutureOption {
-        ScanamoAlpakka.exec(dbClient)(CarTable.put(car))
+    def addOrUpdateCarAdvert(carAdvert: CarAdvert): Future[Option[CarAdvert]] = futureOfOptionEitherToFutureOption {
+        ScanamoAlpakka.exec(dbClient)(CarTable.put(carAdvert))
+    }
+    
+    def deleteCarAdvertByID(id: Int) : Future[Done] = {
+        ScanamoAlpakka.exec(dbClient)(CarTable.delete(ID -> id)).map(deleteItemResult => Done)
     }
 }

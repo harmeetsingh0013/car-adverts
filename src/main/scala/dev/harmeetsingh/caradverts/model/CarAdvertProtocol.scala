@@ -3,10 +3,11 @@ package dev.harmeetsingh.caradverts.model
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import dev.harmeetsingh.caradverts.entity.Car
+import dev.harmeetsingh.caradverts.entity.CarAdvert
 import spray.json.{DefaultJsonProtocol, JsString, JsValue, RootJsonFormat, deserializationError}
 import scala.util.Try
-case class InsertCarAdvertRequest(carAdvert: Car)
+
+case class InsertOrUpdateCarAdvertRequest(carAdvert: CarAdvert)
 
 case class BasicResponse(status: Boolean, message: Option[String] = None)
 
@@ -25,6 +26,6 @@ object CarAdvertProtocol extends SprayJsonSupport with DefaultJsonProtocol {
         override def write(obj : LocalDate) = JsString(datePattern.format(obj))
     }
     
-    implicit val InsertCarAdvertRequestFormatter = jsonFormat1(InsertCarAdvertRequest)
+    implicit val InsertOrUpdateCarAdvertRequestFormatter = jsonFormat1(InsertOrUpdateCarAdvertRequest)
     implicit val BasicResponseFormatter = jsonFormat2(BasicResponse)
 }

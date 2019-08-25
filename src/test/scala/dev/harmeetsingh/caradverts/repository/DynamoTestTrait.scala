@@ -5,6 +5,7 @@ import com.amazonaws.client.builder.AwsClientBuilder
 import com.amazonaws.services.dynamodbv2.local.main.ServerRunner
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer
 import com.amazonaws.services.dynamodbv2.{AmazonDynamoDB, AmazonDynamoDBClientBuilder}
+import com.typesafe.config.ConfigFactory
 import org.scalatest.{AsyncFlatSpec, BeforeAndAfterAll, Matchers}
 
 trait DynamoTestTrait extends AsyncFlatSpec with BeforeAndAfterAll with Matchers
@@ -12,8 +13,10 @@ trait DynamoTestTrait extends AsyncFlatSpec with BeforeAndAfterAll with Matchers
     protected var client : AmazonDynamoDB = _
     protected var server : DynamoDBProxyServer = _
     
+    private val config = ConfigFactory.load()
+    
     override def beforeAll() : Unit = {
-        val dynamoDBPort = "7000"
+        val dynamoDBPort = config.getString("akka.stream.alpakka.dynamodb.port")
         val localArgs = Array("-inMemory", "-sharedDb", "1", "-port", dynamoDBPort)
     
         server = ServerRunner.createServerFromCommandLineArgs(localArgs)

@@ -6,7 +6,7 @@ import dev.harmeetsingh.caradverts.model.Fuel
 import spray.json.DefaultJsonProtocol
 import dev.harmeetsingh.caradverts.model.CarAdvertProtocol._
 
-case class Car(
+case class CarAdvert(
     id: Int,
     title: String,
     fuel : Fuel,
@@ -16,7 +16,7 @@ case class Car(
     firstRegistration: Option[LocalDate]
 )
 
-object Car extends SprayJsonSupport with DefaultJsonProtocol {
+object CarAdvert extends SprayJsonSupport with DefaultJsonProtocol {
     
     final val ID : Symbol = 'id
     final val Title : Symbol = 'title
@@ -26,8 +26,8 @@ object Car extends SprayJsonSupport with DefaultJsonProtocol {
     final val Mileage : Symbol = 'mileage
     final val FirstRegistration : Symbol = 'firstRegistration
     
-    final val TableName = "cars"
+    final val TableName = "cars_adverts"
     import dev.harmeetsingh.caradverts.model.EnumProtocols._
     
-    implicit val formatter  = jsonFormat7(Car.apply)
+    implicit val formatter  = jsonFormat7(CarAdvert.apply)
 }
